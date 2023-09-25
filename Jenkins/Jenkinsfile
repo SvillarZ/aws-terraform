@@ -1,0 +1,41 @@
+pipeline {
+    agent any
+
+environment {
+    AWS_ACCESS_KEY_ID = sh(script: 'aws configure get aws_access_key_id', returnStdout: true).trim()
+    AWS_SECRET_ACCESS_KEY = sh(script: 'aws configure get aws_secret_access_key', returnStdout: true).trim()
+}
+
+    stages {
+        stage('Plan') {
+            steps {
+                script {
+                    sh 'terraform init'
+                    sh 'terraform plan -out=tfplan'
+                }
+            }
+        }
+
+        stage('Apply') {
+            when {
+                input 'Do you want to apply the plan?'
+            }
+            steps {
+                script {
+                    sh 'terraform apply "tfplan"'
+                }
+            }
+        }
+
+        stage('Destroy') {
+            when {
+                input 'Do you want to destroy the resource?'
+            }
+            steps {
+                script {
+                    sh 'terraform destroy'
+                }
+            }
+        }
+    }
+}
