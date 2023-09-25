@@ -17,23 +17,37 @@ pipeline {
         }
 
         stage('Apply') {
-            when {
-                input message: 'Do you want to apply the plan?', ok: 'Apply', submitter: 'user'
-            }
             steps {
                 script {
-                    sh 'terraform apply tfplan'
+                    def userInput = input(
+                        id: 'userInput',
+                        message: 'Do you want to apply the plan? (Yes/No)',
+                        parameters: [choice(name: 'choice', choices: 'Yes\nNo', description: '')]
+                    )
+                    
+                    if (userInput == 'Yes') {
+                        sh 'terraform apply tfplan'
+                    } else {
+                        echo 'Skipping apply stage'
+                    }
                 }
             }
         }
 
         stage('Destroy') {
-            when {
-                input message: 'Do you want to destroy the resource?', ok: 'Destroy', submitter: 'user'
-            }
             steps {
                 script {
-                    sh 'terraform destroy'
+                    def userInput = input(
+                        id: 'userInput',
+                        message: 'Do you want to destroy the resource? (Yes/No)',
+                        parameters: [choice(name: 'choice', choices: 'Yes\nNo', description: '')]
+                    )
+                    
+                    if (userInput == 'Yes') {
+                        sh 'terraform destroy'
+                    } else {
+                        echo 'Skipping destroy stage'
+                    }
                 }
             }
         }
