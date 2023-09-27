@@ -81,7 +81,7 @@ pipeline {
         stage('Crear Clúster Kubernetes') {
             steps {
                 script {
-                    def clusterName = 'bucket-de-almacenamiento-kops' 
+                    def clusterName = 'cluster-de-almacenamiento' 
                     def awsRegion = 'us-west-2'  
 
                     sh "kops create cluster --name=${clusterName} --zones=${awsRegion}"
