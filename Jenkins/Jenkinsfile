@@ -17,8 +17,13 @@ pipeline {
         stage('Plan') {
             steps {
                 script {
-                    sh 'terraform init'
-                    sh 'terraform plan -out=tfplan'
+                    try {
+                        sh 'terraform init'
+                        sh 'terraform plan -out=tfplan'
+                    } catch (Exception e) {
+                        currentBuild.result = 'FAILURE'
+                        error("Error during Terraform plan: ${e.message}")
+                    }
                 }
             }
         }
@@ -33,7 +38,12 @@ pipeline {
                     )
                     
                     if (userInput == 'Yes') {
-                        sh 'terraform apply tfplan'
+                        try {
+                            sh 'terraform apply tfplan'
+                        } catch (Exception e) {
+                            currentBuild.result = 'FAILURE'
+                            error("Error during Terraform apply: ${e.message}")
+                        }
                     } else {
                         echo 'Skipping apply stage'
                     }
@@ -51,7 +61,12 @@ pipeline {
                     )
                     
                     if (userInput == 'Yes') {
-                        sh 'terraform destroy'
+                        try {
+                            sh 'terraform destroy'
+                        } catch (Exception e) {
+                            currentBuild.result = 'FAILURE'
+                            error("Error during Terraform destroy: ${e.message}")
+                        }
                     } else {
                         echo 'Skipping destroy stage'
                     }
@@ -59,4 +74,5 @@ pipeline {
             }
         }
     }
+
 }
