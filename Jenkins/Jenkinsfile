@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        KOPS_STATE_STORE = 's3://bucket-de-almacenamiento-kops'
+        KOPS_STATE_STORE = 's3://bucket-de-almacenamiento'
     }
 
     options {
