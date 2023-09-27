@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    environment {
+        KOPS_STATE_STORE = 's3://bucket-de-almacenamiento-kops'
+    }
+
     options {
         disableConcurrentBuilds()
         parallelsAlwaysFailFast()
@@ -73,6 +77,21 @@ pipeline {
                 }
             }
         }
+
+        stage('Crear Clúster Kubernetes') {
+            steps {
+                script {
+                    def clusterName = 'nuevo-cluster' 
+                    def awsRegion = 'us-west-2'  
+
+                    sh "kops create cluster --name=${clusterName} --zones=${awsRegion}"
+                    sh "kops update cluster ${clusterName} --yes"
+                }
+            }
+        }
+
+
     }
+
 
 }
