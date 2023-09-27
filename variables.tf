@@ -13,16 +13,6 @@ variable "instance_type" {
     default = "t2.micro"
 }
 
-# variable "key_pair" {
-#     type = string
-#     default = "key-test"
-# }
-
-# variable "security_groups" {
-#     type = list(string)
-#     default = [ "launch-wizard-1" ]
-# }
-
 variable "instance_name" {
     type = string
     default = "ec2_example"

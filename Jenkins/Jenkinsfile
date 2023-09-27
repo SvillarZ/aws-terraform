@@ -1,9 +1,16 @@
 pipeline {
     agent any
 
-    environment {
-        AWS_ACCESS_KEY_ID = sh(script: 'aws configure get aws_access_key_id', returnStdout: true).trim()
-        AWS_SECRET_ACCESS_KEY = sh(script: 'aws configure get aws_secret_access_key', returnStdout: true).trim()
+    options {
+        disableConcurrentBuilds()
+        parallelsAlwaysFailFast()
+        timestamps()
+        withCredentials([[
+            $class: 'AmazonWebServicesCredentialsBinding', 
+            credentialsId: 'f5e83b53-c9de-4429-b15d-2c4afda214cd', 
+            accessKeyVariable: 'AWS_ACCESS_KEY_ID', 
+            secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+            ]]) 
     }
 
     stages {
