@@ -37,7 +37,7 @@ resource "aws_instance" "ec2_example" {
 # }
 
 resource "aws_s3_bucket" "mi_bucket" {
-  bucket = "nombre-del-bucket"
+  bucket = "bucket-de-almacenamiento"
   acl    = "private"
 }
 
@@ -54,7 +54,7 @@ resource "aws_s3_bucket_policy" "mi_bucket_policy" {
       "Action": [
         "s3:GetObject"
       ],
-      "Resource": "arn:aws:s3:::nombre-del-bucket/*"
+      "Resource": "arn:aws:s3:::bucket-de-almacenamiento/*"
     }
   ]
 }
