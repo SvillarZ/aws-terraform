@@ -132,7 +132,7 @@ resource "aws_security_group" "eks_worker_sg" {
 # Nodos de trabajo
 resource "aws_launch_configuration" "eks_workers" {
   name_prefix     = "eks-workers-"
-  image_id        = "ami-12345678"
+  image_id        = var.ami
   instance_type   = var.instance_type
   security_groups = [aws_security_group.eks_worker_sg.id]
 }
