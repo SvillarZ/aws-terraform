@@ -14,6 +14,7 @@ provider "aws" {
 resource "aws_instance" "ec2_example" {
   ami           = var.ami
   instance_type = var.instance_type
+  subnet_id     = aws_subnet.subnet_1.id
   tags = {
     Name = var.instance_name
   }
@@ -38,7 +39,18 @@ resource "aws_instance" "ec2_example" {
 
 resource "aws_vpc" "my_vpc" {
   cidr_block = "10.0.0.0/16"
- 
+
+}
+resource "aws_subnet" "subnet_1" {
+  vpc_id            = aws_vpc.my_vpc.id
+  cidr_block        = "10.0.0.0/24"
+  availability_zone = "us-west-2a"
+
+}
+resource "aws_subnet" "subnet_2" {
+  vpc_id            = aws_vpc.my_vpc.id
+  cidr_block        = "10.0.0.0/24"
+  availability_zone = "us-west-2b"
 }
 
 resource "aws_s3_bucket" "mi_bucket" {
@@ -117,19 +129,6 @@ resource "aws_security_group" "eks_worker_sg" {
   description = "Security group for EKS worker nodes"
 }
 
-resource "aws_subnet" "subnet_1" {
-  vpc_id     = "vpc-0c968a2e6b1f87af0" 
-  cidr_block = "10.0.0.0/16" 
-  availability_zone = "us-west-2a"
-  
-}
-
-resource "aws_subnet" "subnet_2" {
-  vpc_id     = "vpc-0980ac9aa0a09404a"
-  cidr_block = "10.0.0.0/20"
-  availability_zone = "us-west-2b"
-}
-
 # Nodos de trabajo
 resource "aws_launch_configuration" "eks_workers" {
   name_prefix     = "eks-workers-"
@@ -144,7 +143,7 @@ resource "aws_autoscaling_group" "eks_workers" {
   desired_capacity     = 2
   max_size             = 5
   launch_configuration = aws_launch_configuration.eks_workers.name
-  vpc_zone_identifier  = [
+  vpc_zone_identifier = [
     aws_subnet.subnet_1.id,
     aws_subnet.subnet_2.id,
   ]
