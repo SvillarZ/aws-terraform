@@ -54,7 +54,12 @@ resource "aws_s3_bucket_policy" "mi_bucket_policy" {
       "Action": [
         "s3:GetObject"
       ],
-      "Resource": "arn:aws:s3:::bucket-de-almacenamiento/*"
+      "Resource": "arn:aws:s3:::bucket-de-almacenamiento/*",
+      "Condition": {
+        "StringEquals": {
+          "aws:SourceVpc": "${aws_vpc.my_vpc.id}"
+        }
+      }
     }
   ]
 }
