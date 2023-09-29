@@ -130,17 +130,3 @@ resource "aws_autoscaling_group" "eks_workers" {
   launch_configuration = aws_launch_configuration.eks_workers.name
   vpc_zone_identifier  = var.subnet_ids
 }
-
-resource "aws_subnet" "subnet1" {
-  vpc_id                  = aws_vpc.my_vpc.id
-  cidr_block              = "10.0.1.0/24"
-  availability_zone       = "us-west-2a"
-  map_public_ip_on_launch = true
-}
-
-resource "aws_subnet" "subnet2" {
-  vpc_id                  = aws_vpc.my_vpc.id
-  cidr_block              = "10.0.2.0/24"
-  availability_zone       = "us-west-2b"
-  map_public_ip_on_launch = true
-}
