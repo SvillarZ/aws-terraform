@@ -25,16 +25,17 @@ resource "aws_instance" "ec2_example" {
 # }
 
 resource "aws_s3_bucket_acl" "bucket-de-almacenamiento-acl" {
-  bucket = aws_s3_bucket_acl.bucket-de-almacenamiento-acl.id
+  bucket = aws_s3_bucket_acl.bucket-de-almacenamiento.id
 
-  # reglas ACL publicas:
+  # Reglas ACL públicas para lectura
+  permissions = ["READ"]
+
   grants {
-    permissions = ["READ"]
     type        = "Group"
     uri         = "http://acs.amazonaws.com/groups/global/AllUsers"
   }
-
 }
+
 
 # Recursos para EKS (Amazon Elastic Kubernetes Service)
 resource "aws_eks_cluster" "my_cluster" {
@@ -47,7 +48,7 @@ resource "aws_eks_cluster" "my_cluster" {
 
 # Rol IAM
 resource "aws_iam_role" "my-eks_cluster_role" {
-  name = "my-eks-cluster-role"
+  name = "eks-cluster-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
