@@ -17,11 +17,11 @@ variable "instance_name" {
   type    = string
   default = "ec2_example"
 }
-variable "subnet_ids" {
-  type = list(string)
-  default = [
-    "subnet-0123456789abcdef0", # us-west-2a
-    "subnet-0123456789abcdef1", # us-west-2b
-    "subnet-0123456789abcdef2", # us-west-2c
-  ]
-}
+# variable "subnet_ids" {
+#   type = list(string)
+#   default = [
+#     "subnet-0123456789abcdef0", # us-west-2a
+#     "subnet-0123456789abcdef1", # us-west-2b
+#     "subnet-0123456789abcdef2", # us-west-2c
+#   ]
+# }
