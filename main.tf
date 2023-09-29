@@ -46,7 +46,7 @@ resource "aws_eks_cluster" "my_cluster" {
 }
 
 # Rol IAM
-resource "aws_iam_role" "my_eks_cluster_role" {
+resource "aws_iam_role" "my-eks_cluster_role" {
   name = "my-eks-cluster-role"
 
   assume_role_policy = jsonencode({
@@ -66,7 +66,7 @@ resource "aws_iam_role" "my_eks_cluster_role" {
 resource "aws_iam_policy_attachment" "my-eks_cluster_attachment" {
  name        = "my-eks-cluster-attachment"  
   policy_arn  = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
-  roles       = [aws_iam_role.my_eks_cluster_role.name]
+  roles       = [aws_iam_role.my-eks_cluster_role.name]
 }
 
 resource "aws_iam_policy_attachment" "my-eks_service_attachment" {
