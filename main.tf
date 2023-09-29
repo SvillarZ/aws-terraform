@@ -118,14 +118,15 @@ resource "aws_security_group" "eks_worker_sg" {
 }
 
 resource "aws_subnet" "subnet_1" {
-  vpc_id     = "vpc-0980ac9aa0a09404a" 
-  cidr_block = "172.31.32.0/20" 
+  vpc_id     = "vpc-0c968a2e6b1f87af0" 
+  cidr_block = "192.168.0.0/16" 
   availability_zone = "us-west-2a"
+  
 }
 
 resource "aws_subnet" "subnet_2" {
   vpc_id     = "vpc-0980ac9aa0a09404a"
-  cidr_block = "172.31.0.0/20"
+  cidr_block = "172.31.0.0/16"
   availability_zone = "us-west-2b"
 }
 
