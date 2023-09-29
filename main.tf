@@ -24,7 +24,7 @@ resource "aws_instance" "ec2_example" {
 #   acl    = "private"
 # }
 resource "aws_s3_bucket_acl" "bucket-de-almacenamiento-acl" {
-  bucket = aws_s3_bucket.bucket-de-almacenamiento.id
+  bucket = aws_s3_bucket_acl.bucket-de-almacenamiento-acl.id
 
   # reglas ACL publicas:
   grants {
@@ -70,13 +70,20 @@ resource "aws_iam_role" "my_eks_cluster_role" {
 }
 
 resource "aws_iam_policy_attachment" "my-eks_cluster_attachment" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
-  role       = aws_iam_role.eks_cluster_role.name
+ name        = "my-eks-cluster-attachment"  
+  policy_arn  = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
+  roles       = [aws_iam_role.my-eks_cluster_role.name]
 }
 
 resource "aws_iam_policy_attachment" "my-eks_service_attachment" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSServicePolicy"
-  role       = aws_iam_role.eks_cluster_role.name
+   name        = "my-eks-service-attachment"  
+  policy_arn  = "arn:aws:iam::aws:policy/AmazonEKSServicePolicy"
+  roles       = [aws_iam_role.my_eks_cluster_role.name]
+}
+resource "aws_security_group" "eks_worker_sg" {
+  name        = "eks-worker-sg"
+  description = "Security group for EKS worker nodes"
+  # Aquí puedes definir las reglas de seguridad necesarias
 }
 
 # Nodos de trabajo
