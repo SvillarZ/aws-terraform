@@ -25,7 +25,7 @@ resource "aws_instance" "ec2_example" {
 # }
 
 resource "aws_s3_bucket_acl" "bucket-de-almacenamiento-acl" {
-  bucket = aws_s3_bucket_acl.bucket-de-almacenamiento.id
+  bucket = aws_s3_bucket_acl.bucket-de-almacenamiento-acl.id
 
   # Reglas ACL públicas para lectura
   permissions = ["READ"]
@@ -40,7 +40,7 @@ resource "aws_s3_bucket_acl" "bucket-de-almacenamiento-acl" {
 # Recursos para EKS (Amazon Elastic Kubernetes Service)
 resource "aws_eks_cluster" "my_cluster" {
   name     = "my-eks-cluster"
-  role_arn = aws_iam_role.my_eks_cluster_role.arn
+  role_arn = aws_iam_role.my-eks_cluster_role.arn
   vpc_config {
     subnet_ids = var.subnet_ids
   }
