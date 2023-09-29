@@ -44,6 +44,8 @@ pipeline {
                     if (userInput == 'Yes') {
                         try {
                             sh 'terraform apply tfplan'
+                            // Si el apply se ejecuta exitosamente, se crea el bucket
+                            sh 'terraform apply -target=aws_s3_bucket.bucket-de-almacenamiento'
                         } catch (Exception e) {
                             currentBuild.result = 'FAILURE'
                             error("Error during Terraform apply: ${e.message}")
@@ -81,7 +83,7 @@ pipeline {
         stage('Crear Clúster Kubernetes') {
             steps {
                 script {
-                    def clusterName = 'cluster-de-almacenamiento' 
+                    def clusterName = 'my-eks-cluster' 
                     def awsRegion = 'us-west-2'  
 
                     sh "kops create cluster --name=${clusterName} --zones=${awsRegion}"
