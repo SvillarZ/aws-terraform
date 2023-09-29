@@ -17,3 +17,7 @@ variable "instance_name" {
     type = string
     default = "ec2_example"
 }
+variable "subnet_ids" {
+    type    = list(string)
+    default = [] 
+}
