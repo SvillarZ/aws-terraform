@@ -114,10 +114,22 @@ resource "aws_security_group" "eks_worker_sg" {
   description = "Security group for EKS worker nodes"
 }
 
+resource "aws_subnet" "subnet_1" {
+  vpc_id     = "vpc-0980ac9aa0a09404a" 
+  cidr_block = "172.31.32.0/20" 
+  availability_zone = "us-west-2a"
+}
+
+resource "aws_subnet" "subnet_2" {
+  vpc_id     = "vpc-0980ac9aa0a09404a"
+  cidr_block = "172.31.0.0/20"
+  availability_zone = "us-west-2b"
+}
+
 # Nodos de trabajo
 resource "aws_launch_configuration" "eks_workers" {
   name_prefix     = "eks-workers-"
-  image_id        = "ami-12345678" 
+  image_id        = "ami-12345678"
   instance_type   = var.instance_type
   security_groups = [aws_security_group.eks_worker_sg.id]
 }
@@ -128,5 +140,8 @@ resource "aws_autoscaling_group" "eks_workers" {
   desired_capacity     = 2
   max_size             = 5
   launch_configuration = aws_launch_configuration.eks_workers.name
-  vpc_zone_identifier  = var.subnet_ids
+  vpc_zone_identifier  = [
+    aws_subnet.subnet_1.id,
+    aws_subnet.subnet_2.id,
+  ]
 }
