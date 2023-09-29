@@ -154,7 +154,7 @@ resource "aws_autoscaling_group" "eks_workers" {
   min_size             = 2
   desired_capacity     = 2
   max_size             = 5
-  launch_configuration = ""
+  launch_configuration = aws_launch_configuration.eks_workers.name
   vpc_zone_identifier = [
     aws_subnet.subnet_1.id,
     aws_subnet.subnet_2.id,
