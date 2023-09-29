@@ -127,6 +127,13 @@ resource "aws_iam_policy_attachment" "my-eks_service_attachment" {
 resource "aws_security_group" "eks_worker_sg" {
   name        = "eks-worker-sg"
   description = "Security group for EKS worker nodes"
+
+    ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 }
 
 # Nodos de trabajo
@@ -134,7 +141,7 @@ resource "aws_launch_configuration" "eks_workers" {
   name_prefix     = "eks-workers-"
   image_id        = var.ami
   instance_type   = var.instance_type
-  security_groups = [aws_security_group.eks_worker_sg.id]
+  security_groups =  [aws_security_group.eks_worker_sg.id]
 }
 
 resource "aws_autoscaling_group" "eks_workers" {
