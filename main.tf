@@ -19,28 +19,22 @@ resource "aws_instance" "ec2_example" {
   }
 }
 
-# resource "aws_s3_bucket" "bucket-de-almacenamiento" {
-#   bucket = "bucket-de-almacenamiento" 
-#   acl    = "private"
-# }
-resource "aws_s3_bucket_acl" "bucket-de-almacenamiento-acl" {
-  bucket = aws_s3_bucket_acl.bucket-de-almacenamiento-acl.id
-
-  # reglas ACL publicas:
-  grants {
-    permissions = ["READ"]
-    type        = "Group"
-    uri         = "http://acs.amazonaws.com/groups/global/AllUsers"
-  }
-
-  # privadas
-  # grants {
-  #   id          = "Canonical User ID"
-  #   permissions = ["READ"]
-  # }
-
-
+resource "aws_s3_bucket" "bucket-de-almacenamiento" {
+  bucket = "bucket-de-almacenamiento" 
+  acl    = "private"
 }
+
+# resource "aws_s3_bucket_acl" "bucket-de-almacenamiento-acl" {
+#   bucket = aws_s3_bucket_acl.bucket-de-almacenamiento-acl.id
+
+#   # reglas ACL publicas:
+#   grants {
+#     permissions = ["READ"]
+#     type        = "Group"
+#     uri         = "http://acs.amazonaws.com/groups/global/AllUsers"
+#   }
+
+# }
 
 # Recursos para EKS (Amazon Elastic Kubernetes Service)
 resource "aws_eks_cluster" "my_cluster" {
@@ -78,12 +72,11 @@ resource "aws_iam_policy_attachment" "my-eks_cluster_attachment" {
 resource "aws_iam_policy_attachment" "my-eks_service_attachment" {
    name        = "my-eks-service-attachment"  
   policy_arn  = "arn:aws:iam::aws:policy/AmazonEKSServicePolicy"
-  roles       = [aws_iam_role.my_eks_cluster_role.name]
+  roles       = [aws_iam_role.my-eks_cluster_role.name]
 }
 resource "aws_security_group" "eks_worker_sg" {
   name        = "eks-worker-sg"
   description = "Security group for EKS worker nodes"
-  # Aquí puedes definir las reglas de seguridad necesarias
 }
 
 # Nodos de trabajo
