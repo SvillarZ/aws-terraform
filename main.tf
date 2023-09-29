@@ -117,16 +117,16 @@ resource "aws_security_group" "eks_worker_sg" {
 # Nodos de trabajo
 resource "aws_launch_configuration" "eks_workers" {
   name_prefix     = "eks-workers-"
-  image_id        = var.ami
+  image_id        = "ami-12345678" 
   instance_type   = var.instance_type
   security_groups = [aws_security_group.eks_worker_sg.id]
 }
 
 resource "aws_autoscaling_group" "eks_workers" {
   name                 = "eks-workers"
-  min_size             = 1
-  desired_capacity     = 1
-  max_size             = 10
+  min_size             = 2
+  desired_capacity     = 2
+  max_size             = 5
   launch_configuration = aws_launch_configuration.eks_workers.name
   vpc_zone_identifier  = var.subnet_ids
 }
