@@ -19,9 +19,5 @@ variable "instance_name" {
 }
 variable "subnet_ids" {
   type = list(string)
-  default = [
-    "subnet-041b18b73de86caa4",
-    "subnet-0ee7a2ffc3673b043",
-    "subnet-0726a7516752ac87a"
-  ]
+  default = [aws_subnet.subnet1.id, aws_subnet.subnet2.id]
 }
