@@ -20,8 +20,8 @@ variable "instance_name" {
 variable "subnet_ids" {
   type = list(string)
   default = [
-    "subnet-00d35da20b86a8711", # us-west-2c
-    "subnet-0ee7a2ffc3673b043", # us-west-2a
-    "subnet-01fb3c8936fbbcadd", # us-west-2b
+    "subnet-0123456789abcdef0", # us-west-2a
+    "subnet-0123456789abcdef1", # us-west-2b
+    "subnet-0123456789abcdef2", # us-west-2c
   ]
 }
