@@ -80,20 +80,20 @@ pipeline {
             }
         }
 
-        stage('Crear Clúster Kubernetes') {
-            steps {
-                script {
-                    def clusterName = 'my-eks-cluster' 
-                    def awsRegion = 'us-west-2'  
+    //     stage('Crear Clúster Kubernetes') {
+    //         steps {
+    //             script {
+    //                 def clusterName = 'my-eks-cluster' 
+    //                 def awsRegion = 'us-west-2'  
 
-                    sh "kops create cluster --name=${clusterName} --zones=${awsRegion}"
-                    sh "kops update cluster ${clusterName} --yes"
-                }
-            }
-        }
+    //                 sh "kops create cluster --name=${clusterName} --zones=${awsRegion}"
+    //                 sh "kops update cluster ${clusterName} --yes"
+    //             }
+    //         }
+    //     }
 
 
-    }
+    // }
 
 
 }
