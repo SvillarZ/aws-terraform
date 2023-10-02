@@ -1,20 +1,18 @@
 pipeline {
     agent any
 
-    environment {
-        KOPS_STATE_STORE = 's3://bucket-de-almacenamiento'
-    }
-
     options {
         disableConcurrentBuilds()
         parallelsAlwaysFailFast()
         timestamps()
-        withCredentials([[
-            $class: 'AmazonWebServicesCredentialsBinding', 
-            credentialsId: 'f5e83b53-c9de-4429-b15d-2c4afda214cd', 
-            accessKeyVariable: 'AWS_ACCESS_KEY_ID', 
-            secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-            ]]) 
+        withCredentials([
+            [
+                $class: 'AmazonWebServicesCredentialsBinding',
+                credentialsId: 'f5e83b53-c9de-4429-b15d-2c4afda214cd',
+                accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+            ]
+        ])
     }
 
     stages {
@@ -36,15 +34,14 @@ pipeline {
             steps {
                 script {
                     def userInput = input(
-                        id: 'userInput',
+                        id: 'userInputApply',
                         message: 'Do you want to apply the plan? (Yes/No)',
-                        parameters: [choice(name: 'choice', choices: 'Yes\nNo', description: '')]
+                        parameters: [choice(name: 'choiceApply', choices: 'Yes\nNo', description: '')]
                     )
-                    
+
                     if (userInput == 'Yes') {
                         try {
                             sh 'terraform apply tfplan'
-                            // Si el apply se ejecuta exitosamente, se crea el bucket
                             sh 'terraform apply -target=aws_s3_bucket.bucket-de-almacenamiento'
                         } catch (Exception e) {
                             currentBuild.result = 'FAILURE'
@@ -61,14 +58,14 @@ pipeline {
             steps {
                 script {
                     def userInput = input(
-                        id: 'userInput',
+                        id: 'userInputDestroy',
                         message: 'Do you want to destroy the resource? (Yes/No)',
-                        parameters: [choice(name: 'choice', choices: 'Yes\nNo', description: '')]
+                        parameters: [choice(name: 'choiceDestroy', choices: 'Yes\nNo', description: '')]
                     )
-                    
+
                     if (userInput == 'Yes') {
                         try {
-                            sh 'terraform destroy'
+                            sh 'terraform destroy -auto-approve'
                         } catch (Exception e) {
                             currentBuild.result = 'FAILURE'
                             error("Error during Terraform destroy: ${e.message}")
@@ -79,21 +76,5 @@ pipeline {
                 }
             }
         }
-
-    //     stage('Crear Clúster Kubernetes') {
-    //         steps {
-    //             script {
-    //                 def clusterName = 'my-eks-cluster' 
-    //                 def awsRegion = 'us-west-2'  
-
-    //                 sh "kops create cluster --name=${clusterName} --zones=${awsRegion}"
-    //                 sh "kops update cluster ${clusterName} --yes"
-    //             }
-    //         }
-    //     }
-
-
     }
-
-
 }
