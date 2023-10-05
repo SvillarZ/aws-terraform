@@ -15,6 +15,7 @@ resource "aws_instance" "ec2_example" {
   ami           = var.ami
   instance_type = var.instance_type
   subnet_id     = aws_subnet.subnet_1.id
+  key_name               = var.key_pair
   tags = {
     Name = var.instance_name
   }
