@@ -11,9 +11,6 @@ provider "aws" {
   region = var.region
 }
 
-data "aws_subnet" "availability_zone" {
-  availability_zone = "us-west-2a"
-}
 resource "aws_instance" "ec2_example" {
   ami           = var.ami
   instance_type = var.instance_type
