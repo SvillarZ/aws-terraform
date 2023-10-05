@@ -11,11 +11,14 @@ provider "aws" {
   region = var.region
 }
 
+data "aws_subnet" "availability_zone" {
+  availability_zone = "us-west-2a"
+}
 resource "aws_instance" "ec2_example" {
   ami           = var.ami
   instance_type = var.instance_type
   subnet_id     = aws_subnet.subnet_1.id
-  key_name               = var.key_pair
+  key_name      = var.key_pair
   tags = {
     Name = var.instance_name
   }
@@ -39,12 +42,19 @@ resource "aws_instance" "ec2_example" {
 # }
 
 resource "aws_vpc" "my_vpc" {
-  cidr_block = "10.0.0.0/16"
+  cidr_block           = "10.0.0.0/16"
+  enable_dns_support   = true
+  enable_dns_hostnames = true
+}
+resource "aws_internet_gateway" "default" {
+  vpc_id = aws_vpc.my_vpc.id
 }
 resource "aws_subnet" "subnet_1" {
   vpc_id            = aws_vpc.my_vpc.id
   cidr_block        = "10.0.1.0/24"
   availability_zone = "us-west-2a"
+  map_public_ip_on_launch = true
+
 
 }
 resource "aws_subnet" "subnet_2" {
@@ -127,8 +137,8 @@ resource "aws_iam_policy_attachment" "my-eks_service_attachment" {
 resource "aws_security_group" "eks_worker_sg" {
   name        = "eks-worker-sg"
   description = "Security group for EKS worker nodes"
-  vpc_id = aws_vpc.my_vpc.id
-    ingress {
+  vpc_id      = aws_vpc.my_vpc.id
+  ingress {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
@@ -138,7 +148,7 @@ resource "aws_security_group" "eks_worker_sg" {
     from_port   = 0
     to_port     = 65535
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]  
+    cidr_blocks = ["0.0.0.0/0"]
   }
 }
 
@@ -147,7 +157,7 @@ resource "aws_launch_configuration" "eks_workers" {
   name_prefix     = "eks-workers-"
   image_id        = var.ami
   instance_type   = var.instance_type
-  security_groups =  [aws_security_group.eks_worker_sg.id]
+  security_groups = [aws_security_group.eks_worker_sg.id]
 }
 
 resource "aws_autoscaling_group" "eks_workers" {
